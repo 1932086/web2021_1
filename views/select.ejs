@@ -10,7 +10,7 @@
       <% for( let row of data ) { %>
         <tr>
             <td><%= row.id %></td>
-            <td><%= row.都道府県 %></td>
+            <td><a href="/db/<%= row.id %>"><%= row.都道府県 %></a></td>
             <td><%= row.人口 %></td>
         </tr>
       <% } %>
