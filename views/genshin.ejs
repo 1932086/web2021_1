@@ -1,28 +1,21 @@
 <!Doctype html>
-
 <html>
-
 <head>
-
 <meta charset="utf-8">
-
 <title>Show message</title>
-
 </head>
-
 <body>
-
-<h2><%= data[0].都道府県 %>の詳細</h2>
-
+<h2>原神キャラクター一覧</h2>
 <table>
-
 <% for( let row of data ) { %>
-
 <tr><td>ID</td><td><%= row.id %></td></tr>
-
-<tr><td>人口</td><td><%= row.人口 %></td></tr>
-
-<tr><td>大学数</td><td><%= row.大学 %></td></tr>
+<tr><td>名前</td><td><a href="/db/<%= row.id %>"><%= row.name %></td></tr>
+<tr><td>性別</td><td><%= row.gender %></td></tr>
+<tr><td>誕生日</td><td><%= row.birthday %></td></tr>
+<tr><td>声優</td><td><%= row.voice_actor %></td></tr>
+<tr><td>武器種</td><td><%= row.weapon %></td></tr>
+<tr><td>国</td><td><%= row.country %></td></tr>
+<tr><td>元素</td><td><%= row.element %></td></tr>
 
 <% } %>
 

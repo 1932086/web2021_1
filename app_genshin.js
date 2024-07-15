@@ -9,32 +9,47 @@ app.use("/public", express.static(__dirname + "/public"));
 
 app.get("/", (req, res) => {
   const message = "Hello world";
-  res.render('show', {mes:message});
+  res.render('show2', {mes:message});
 });
 
 app.get("/db", (req, res) => {
     db.serialize( () => {
-        db.all("select id, 都道府県, 人口 from example;", (error, row) => {
+        db.all("select id, name, gender, birthday, weapon_type, element_id, country_id from example;",(error, row) => {
             if( error ) {
-                res.render('show', {mes:"エラーです"});
+                res.render('show2', {mes:"エラーです"});
             }
-            res.render('select', {data:row});
+            res.render('genshin', {data:row});
         })
     })
 })
 app.get("/top", (req, res) => {
-    //console.log(req.query.pop);    // ①
+    let sql1 = `
+    select character.id, character.name,weapon.name as weapon
+    from character inner join weapon
+    on character.weapon_type=weapon.id;
+    `
+    let sql2 = `
+    select character.id, character.name,country.name as weapon
+    from character inner join country
+    on character.country_id=country.id;
+    `
+    let sql3 = `
+    select character.id, character.name,element.name as weapon
+    from character inner join element
+    on character.element_id=element.id;
+    `
+    console.log(req.query.pop);
     let desc = "";
     if( req.query.desc ) desc = " desc";
-    let sql = "select id, 都道府県, 人口 from example order by 人口" + desc + " limit " + req.query.pop + ";";
-    //console.log(sql);    // ②
+    let sql = "select character.id, character.name, character.gender, character.weapon, character.element from example order by id" + desc + " limit " + req.query.pop + ";";
+    console.log(sql);
     db.serialize( () => {
         db.all(sql, (error, data) => {
             if( error ) {
-                res.render('show', {mes:"エラーです"});
+                res.render('show2', {mes:"エラーです"});
             }
             //console.log(data);    // ③
-            res.render('select', {data:data});
+            res.render('genshin', {data:data});
         })
     })
 })
