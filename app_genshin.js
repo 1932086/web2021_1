@@ -49,6 +49,7 @@ app.get("/", (req, res) => {
   const message = "Hello world";
   res.render('show2', {mes:message});
 });
+
 app.get("/db", (req, res) => {
     db.serialize( () => {
         db.all(sql1,(error,row) => {
@@ -81,9 +82,11 @@ app.get("/db/:id", (req, res) => {
     db.serialize(() => {
         db.all( sql1 + 'from example where id=' + req.params.id + ';', (error, row) => {
             if (error) {
+           
                 res.render('show2', {mes:'エラーです'});
             }
-            res.render('genshin_db', {data:row});
+            console.log(req.params.id);
+            res.render('genshin_db1', {data:req.params.id});
         })
     })
 });
