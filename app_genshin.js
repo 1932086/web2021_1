@@ -4,55 +4,89 @@ const app = express();
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('genshin.db');
 
+    let sql1 = `
+    select character.id, character.name,character.gender,character.birthday,character.voice_actor,weapon.name as weapon,country.name as country,element.name as element
+    from character inner join weapon
+    on character.weapon_type=weapon.id
+    inner join country
+    on character.country_id=country.id
+    inner join element
+    on character.element_id=element.id;
+    `
+        let sql2 = `
+    select character.id, character.name,character.gender,weapon.name as weapon,element.name as element
+    from character inner join weapon
+    on character.weapon_type=weapon.id
+    inner join element
+    on character.element_id=element.id;
+    `
 app.set('view engine', 'ejs');
 app.use("/public", express.static(__dirname + "/public"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+db.serialize( () => {
+
+ db.all( sql1, (error, row) => {
+
+  if(error) {
+
+   console.log('Error: ', error );
+   return;
+
+  }
+
+  for( let data of row ) {
+
+   console.log( data.id + ' : ' + data.name + ' : ' + data.gender + ' : ' + data.birthday + ' : ' + data.voice_actor + ' : ' + data.weapon + ' : ' + data.country + ' : ' + data.element );
+  }
+
+ });
+
+});
 
 app.get("/", (req, res) => {
   const message = "Hello world";
   res.render('show2', {mes:message});
 });
-
 app.get("/db", (req, res) => {
     db.serialize( () => {
-        db.all("select id, name, gender, birthday, weapon_type, element_id, country_id from example;",(error, row) => {
+        db.all(sql1,(error,row) => {
             if( error ) {
                 res.render('show2', {mes:"エラーです"});
             }
-            res.render('genshin', {data:row});
+            console.log('row =>' + row);
+            res.render('genshin_db', {data:row});
+            
         })
     })
 })
 app.get("/top", (req, res) => {
-    let sql1 = `
-    select character.id, character.name,weapon.name as weapon
-    from character inner join weapon
-    on character.weapon_type=weapon.id;
-    `
-    let sql2 = `
-    select character.id, character.name,country.name as weapon
-    from character inner join country
-    on character.country_id=country.id;
-    `
-    let sql3 = `
-    select character.id, character.name,element.name as weapon
-    from character inner join element
-    on character.element_id=element.id;
-    `
     console.log(req.query.pop);
     let desc = "";
     if( req.query.desc ) desc = " desc";
-    let sql = "select character.id, character.name, character.gender, character.weapon, character.element from example order by id" + desc + " limit " + req.query.pop + ";";
+    let sql = sql2 + "from example order by id" + desc + " limit " + req.query.pop + ";";
     console.log(sql);
     db.serialize( () => {
         db.all(sql, (error, data) => {
             if( error ) {
                 res.render('show2', {mes:"エラーです"});
             }
-            //console.log(data);    // ③
+            console.log("data  =>" + data);    // ③
             res.render('genshin', {data:data});
         })
     })
 })
+app.get("/db/:id", (req, res) => {
+    db.serialize(() => {
+        db.all( sql1 + 'from example where id=' + req.params.id + ';', (error, row) => {
+            if (error) {
+                res.render('show2', {mes:'エラーです'});
+            }
+            res.render('genshin_db', {data:row});
+        })
+    })
+});
 app.use(function(req, res, next) {
   res.status(404).send('ページが見つかりません');
 });

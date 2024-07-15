@@ -5,21 +5,19 @@
 <title>Show message</title>
 </head>
 <body>
-<h2>原神キャラクター一覧</h2>
-<table>
+  <h2>原神キャラクター一覧</h2>
+  <table>
 <% for( let row of data ) { %>
-<tr><td>ID</td><td><%= row.id %></td></tr>
-<tr><td>名前</td><td><a href="/db/<%= row.id %>"><%= row.name %></td></tr>
-<tr><td>性別</td><td><%= row.gender %></td></tr>
-<tr><td>誕生日</td><td><%= row.birthday %></td></tr>
-<tr><td>声優</td><td><%= row.voice_actor %></td></tr>
-<tr><td>武器種</td><td><%= row.weapon %></td></tr>
-<tr><td>国</td><td><%= row.country %></td></tr>
-<tr><td>元素</td><td><%= row.element %></td></tr>
+    <tr>
+<td>ID.</td><td><%= row.id %></td>
+<td>　名前.</td><td><a href="/db/<%= row.id %>"><%= row.name %></td>
+<td>　性別.</td><td><%= row.gender %></td>
+<td>　武器種.</td><td><%= row.weapon %></td>
+<td>　元素.</td><td><%= row.element %></td>
+    </tr>
+  <% } %>
 
-<% } %>
-
-<a href='/db'>戻る</a><br>
+<td><tr><a href='/top'>戻る</a></tr><br>
 
 </table>
 

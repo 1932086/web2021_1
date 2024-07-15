@@ -18,6 +18,7 @@ app.get("/db", (req, res) => {
             if( error ) {
                 res.render('show', {mes:"エラーです"});
             }
+            console.log('row =>' + row);
             res.render('select', {data:row});
         })
     })
