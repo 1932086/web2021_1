@@ -90,6 +90,30 @@ app.get("/db/:id", (req, res) => {
         })
     })
 });
+app.get("/element", (req, res) => {
+    db.serialize( () => {
+        db.all(sql2 + 'from example where element_id=' + req.params.element_id + ';',(error,row) => {
+            if( error ) {
+                res.render('show2', {mes:"エラーです"});
+            }
+            console.log('row =>' + row);
+            res.render('genshin', {data:row});
+            
+        })
+    })
+})
+app.get("/weapon", (req, res) => {
+    db.serialize( () => {
+        db.all(sql2 + 'from example where weapon_type=' + req.params.weapon_type + ';',(error,row) => {
+            if( error ) {
+                res.render('show2', {mes:"エラーです"});
+            }
+            console.log('row =>' + row);
+            res.render('genshin', {data:row});
+            
+        })
+    })
+})
 app.use(function(req, res, next) {
   res.status(404).send('ページが見つかりません');
 });
